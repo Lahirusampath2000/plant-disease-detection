@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css'; // ✅ Import Bootstrap CSS globally
 import 'bootstrap/dist/js/bootstrap.bundle.min'; // ✅ Import Bootstrap JS globally
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
