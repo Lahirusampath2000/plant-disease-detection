@@ -9,7 +9,7 @@ function ImageUpload() {
         <label for="image">Select an image:</label>
         <br/>
         <br/>
-        <input type="file" id="image" name="image" accept="image/*" />
+        <input class="form-control" type="file" id="formFile" />
         <br/>
         <br/>
         <button type="submit" class="btn btn-primary">Submit</button>
