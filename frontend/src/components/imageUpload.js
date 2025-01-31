@@ -77,6 +77,9 @@ function ImageUpload() {
             <button type="submit" className="btn btn-primary">
               submit
             </button>
+            <button type="submit" className="btn btn-primary">
+              Predict
+            </button>
           </div>
           
         </form>
