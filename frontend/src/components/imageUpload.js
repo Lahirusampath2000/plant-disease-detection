@@ -73,11 +73,11 @@ function ImageUpload() {
           <br />
           <input id="formFile" className="form-control" type="file" multiple onChange={handleChange} />
           <br />
-          <div>
-            <button type="submit" className="btn btn-primary">
+          <div >
+            <button type="submit" className="btn btn-primary" style={{ marginRight: "10px" }}>
               submit
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-success">
               Predict
             </button>
           </div>
