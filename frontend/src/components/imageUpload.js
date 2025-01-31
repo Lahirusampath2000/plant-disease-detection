@@ -73,9 +73,12 @@ function ImageUpload() {
           <br />
           <input id="formFile" className="form-control" type="file" multiple onChange={handleChange} />
           <br />
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
+          <div>
+            <button type="submit" className="btn btn-primary">
+              submit
+            </button>
+          </div>
+          
         </form>
       </div>
 
