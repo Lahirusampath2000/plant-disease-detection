@@ -81,7 +81,7 @@ const ImageUpload = () => {
           width: "100%",
         }}
       >
-        <h1>Upload Image & Predict Plant Disease</h1>
+        <h1>GreenShield</h1>
         <br />
         {responseMsg.status === "success" && <div className="alert alert-success">{responseMsg.message}</div>}
         {responseMsg.error && <div className="alert alert-danger">{responseMsg.error}</div>}
