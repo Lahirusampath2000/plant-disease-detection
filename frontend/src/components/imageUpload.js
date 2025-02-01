@@ -40,7 +40,7 @@ const ImageUpload = () => {
   };
 
   // Handle image prediction
-  const predictHandler = async () => {
+  const predictDisease = async () => {
     if (!image) {
       alert("Please select an image.");
       return;
@@ -92,8 +92,8 @@ const ImageUpload = () => {
           <br />
           <input id="formFile" className="form-control" type="file" onChange={handleFileChange} />
           <br />
-          <button type="button" className="btn btn-primary" onClick={uploadImage}>Upload Image</button>
-          <button type="button" className="btn btn-secondary" onClick={predictHandler}>Predict Image</button>
+          <button type="button" className="btn btn-primary" onClick={uploadImage} style={{ marginRight: "15px" }}>Upload Image</button>
+          <button type="button" className="btn btn-secondary" onClick={predictDisease}>Predict Image</button>
         </form>
 
         {uploadedImage && (
