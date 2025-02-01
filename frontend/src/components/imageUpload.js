@@ -1,44 +1,37 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function ImageUpload() {
-  const [images, setImages] = useState([]);
+const ImageUpload = () => {
+  const [image, setImage] = useState(null);
   const [responseMsg, setResponseMsg] = useState({ status: "", message: "", error: "" });
+  const [prediction, setPrediction] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
-  // Image change handler
-  const handleChange = (e) => {
-    const files = Array.from(e.target.files);
-    const validImages = [];
-
-    files.forEach((file) => {
-      if (file.type === "image/png" || file.type === "image/jpg" || file.type === "image/jpeg") {
-        validImages.push(file);
-      } else {
-        setResponseMsg({ ...responseMsg, error: "Only JPG, PNG, and JPEG files are allowed" });
-      }
-    });
-
-    setImages(validImages);
+  // Handle file selection
+  const handleFileChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
-  // Submit handler
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    if (images.length === 0) {
-      alert("Please select at least one valid image");
+  // Handle file upload
+  const uploadImage = async () => {
+    if (!image) {
+      alert("Please select an image.");
       return;
     }
 
-    const data = new FormData();
-    images.forEach((image) => data.append("files[]", image));
+    const formData = new FormData();
+    formData.append("files[]", image);
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/upload", data);
+      const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       if (response.status === 201) {
-        setResponseMsg({ status: "success", message: "Successfully Uploaded" });
-        setTimeout(() => setResponseMsg({ status: "", message: "", error: "" }), 3000);
-        setImages([]);
-        document.getElementById("imageForm").reset();
+        setUploadedImage(URL.createObjectURL(image)); // Display uploaded image
+        setResponseMsg({ status: "success", message: "Successfully uploaded the image" });
       }
     } catch (error) {
       console.error(error);
@@ -46,64 +39,94 @@ function ImageUpload() {
     }
   };
 
+  // Handle image prediction
+  const predictHandler = async () => {
+    if (!image) {
+      alert("Please select an image.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("files[]", image);
+
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/predict", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        setPrediction(response.data.prediction);
+        setResponseMsg({ status: "success", message: `Prediction: ${response.data.prediction}` });
+      }
+    } catch (error) {
+      console.error(error);
+      setResponseMsg({ status: "failed", message: "Prediction failed. Try again." });
+    }
+  };
+
   return (
-    <div style={{ display: "flex", justifyContent: "flex-start", padding: "20px", position: "relative" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", position: "relative" }}>
       {/* Form Container */}
       <div
         className="container"
         style={{
-          position: "absolute",
-          left: "60%",
-          top: "300%",
-          zIndex: 2,
           backgroundColor: "rgba(255, 255, 255, 0.8)",
           padding: "40px",
           borderRadius: "10px",
-          overflowY: "auto",
+          boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
+          zIndex: 2,
+          maxWidth: "500px",  // Add maximum width to control the form width
+          width: "100%",
         }}
       >
-        <h1>Upload an Image</h1>
+        <h1>Upload Image & Predict Plant Disease</h1>
         <br />
         {responseMsg.status === "success" && <div className="alert alert-success">{responseMsg.message}</div>}
         {responseMsg.error && <div className="alert alert-danger">{responseMsg.error}</div>}
         <br />
 
-        <form id="imageForm" onSubmit={submitHandler} encType="multipart/form-data">
+        <form id="imageForm" encType="multipart/form-data">
           <label htmlFor="formFile">Select an image:</label>
           <br />
-          <input id="formFile" className="form-control" type="file" multiple onChange={handleChange} />
+          <input id="formFile" className="form-control" type="file" onChange={handleFileChange} />
           <br />
-          <div >
-            <button type="submit" className="btn btn-primary" style={{ marginRight: "10px" }}>
-              submit
-            </button>
-            <button type="submit" className="btn btn-success">
-              Predict
-            </button>
-          </div>
-          
+          <button type="button" className="btn btn-primary" onClick={uploadImage}>Upload Image</button>
+          <button type="button" className="btn btn-secondary" onClick={predictHandler}>Predict Image</button>
         </form>
+
+        {uploadedImage && (
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <h3>Uploaded Image:</h3>
+            <img src={uploadedImage} alt="Uploaded" style={{ maxWidth: "100%", height: "auto" }} />
+          </div>
+        )}
+
+        {prediction && (
+          <div>
+            <h3>Predicted Disease Class: {prediction}</h3>
+          </div>
+        )}
       </div>
 
       {/* Background Blur Image */}
       <div
         style={{
-          flex: 1,
-          backgroundImage: "url('/images/plantimg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          height: "100vh",
-          filter: "blur(8px)",
           position: "absolute",
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
+          backgroundImage: "url('/images/plantimg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(8px)",
           zIndex: 1,
         }}
       ></div>
     </div>
   );
-}
+};
 
 export default ImageUpload;
