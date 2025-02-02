@@ -21,7 +21,7 @@ class_names = [
 def load_model():
     """Load the trained model"""
     print("Loading model...")
-    model = tf.keras.models.load_model('new_plant_disease_trained_model.keras')
+    model = tf.keras.models.load_model('plant_disease_detection_mobilenetv2model.keras')
     print("Model loaded successfully.")
     return model
 

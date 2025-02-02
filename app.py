@@ -17,7 +17,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 # Load trained model for prediction
-model = tf.keras.models.load_model('new_plant_disease_trained_model.keras')
+model = tf.keras.models.load_model('plant_disease_detection_mobilenetv2model.keras')
 
 # Define class names for predictions
 class_names = [
@@ -45,7 +45,7 @@ def upload_file():
             "message": 'No file part in the request',
             "status": 'failed'
         })
-        resp.status_code = 400
+        resp.status_code = 400  # Return a 400 Bad Request if no file part is found
         return resp
 
     files = request.files.getlist('files[]')
@@ -53,54 +53,72 @@ def upload_file():
     success = False
 
     for file in files:
-        if file and allowed_file(file.filename):
+        if file and allowed_file(file.filename):  # Check if the file is allowed
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             success = True
         else:
+            errors[file.filename] = 'File type is not allowed'  # Collect error for each file
             resp = jsonify({
                 "message": 'File type is not allowed',
-                "status": 'failed'
+                "status": 'failed',
+                "errors": errors
             })
-            return resp
+            resp.status_code = 400  # Return 400 for invalid file types
+            return resp  # Exit the loop on error and return response immediately
 
     if success:
         resp = jsonify({
             "message": 'Files successfully uploaded',
             "status": 'success'
         })
-        resp.status_code = 201
+        resp.status_code = 201  # Return 201 Created for successful uploads
         return resp
     else:
-        resp = jsonify(errors)
-        resp.status_code = 500
+        resp = jsonify({
+            "message": 'No files were uploaded',
+            "status": 'failed',
+            "errors": errors
+        })
+        resp.status_code = 500  # Return 500 if no files were successfully uploaded
         return resp
 
-# Route for prediction
-#@app.route("/predict", methods=["POST"])
 @app.route('/predict', methods=['POST'])
-
 def predict():
     if "files[]" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
 
     file = request.files["files[]"]
-    file_path = "temp_image.jpg"
-    file.save(file_path)
 
-    # Load and preprocess the image
-    img = cv2.imread(file_path)
-    img = cv2.resize(img, (128, 128))  # Resize to match model's expected input
-    img = img / 255.0  # Normalize the image
-    img = np.expand_dims(img, axis=0)  # Add batch dimension
+    if file and allowed_file(file.filename):
+        
+        filename = secure_filename(file.filename)
+        file_path = os.path.join('uploads', filename)
+        file.save(file_path)
 
-    # Make prediction
-    prediction = model.predict(img)
-    result_index = np.argmax(prediction)
-    predicted_class = class_names[result_index]
+        
+        try:
+            image = Image.open(file_path)
+            image.verify()  
+        except (IOError, SyntaxError) as e:
+            return jsonify({"error": "Invalid image file"}), 400
 
-    # Return prediction
-    return jsonify({"prediction": predicted_class})
+        
+        img = cv2.imread(file_path)
+        if img is None:
+            return jsonify({"error": "Failed to read the image"}), 400
+
+        
+        try:
+            img = cv2.resize(img, (128, 128))  # Resize to match model's expected input
+        except cv2.error as e:
+            return jsonify({"error": "Error resizing image", "details": str(e)}), 400
+
+       
+        
+        return jsonify({"message": "Prediction successful"})
+    else:
+        return jsonify({"error": "Invalid file type. Only jpg, jpeg, and png are allowed."}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)
