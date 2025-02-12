@@ -37,6 +37,19 @@ class_names = [
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+#Route for signup
+@app.route('/signup', methods=['POST'])
+def signup():
+    name=request.json['name']
+    password=request.json['password']
+
+    return jsonify(
+        {
+            "id": 1,
+            "name": name,
+        }
+    )
+
 # Route for file upload
 @app.route('/upload', methods=['POST'])
 def upload_file():
