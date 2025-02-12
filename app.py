@@ -5,6 +5,7 @@ import tensorflow as tf
 import numpy as np
 import cv2
 from werkzeug.utils import secure_filename  # pip install Werkzeug
+from models import db, User
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
