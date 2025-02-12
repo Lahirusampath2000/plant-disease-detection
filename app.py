@@ -15,7 +15,18 @@ app.secret_key = "caircocoders-ednalan"
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_ECHO = True
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 # Load trained model for prediction
 model = tf.keras.models.load_model('plant_disease_detection_mobilenetv2model.keras')
