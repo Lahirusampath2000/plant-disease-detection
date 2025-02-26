@@ -6,6 +6,9 @@ import numpy as np
 import cv2
 from werkzeug.utils import secure_filename  # pip install Werkzeug
 from models import db, User
+from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
+from PIL import Image
+
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -23,6 +26,7 @@ SQLALCHEMY_ECHO = True
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
+bcrypt=Bcrypt(app)
 db.init_app(app)
 
 with app.app_context():
@@ -51,14 +55,46 @@ def allowed_file(filename):
 
 #Route for signup
 @app.route('/signup', methods=['POST'])
+
 def signup():
     name=request.json['name']
     password=request.json['password']
+
+    user_exists = User.query.filter_by(name=name).first()
+
+
+    if user_exists:
+        return jsonify({"error": "User already exists"}), 400
+    
+    
+    hashed_password=bcrypt.generate_password_hash(password)
+    new_user=User(name=name, password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
 
     return jsonify(
         {
             "id": 1,
             "name": name,
+        }
+    )
+
+@app.route('/login', methods=['POST'])
+def login():
+    name=request.json['name']
+    password=request.json['password']
+
+    user = User.query.filter_by(name=name).first()
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 400
+
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Invalid password"}), 400
+
+    return jsonify(
+        {
+            "id":user.id,
+            "name":user.name,
         }
     )
 
@@ -108,6 +144,8 @@ def upload_file():
         resp.status_code = 500  # Return 500 if no files were successfully uploaded
         return resp
 
+
+# Route for prediction
 @app.route('/predict', methods=['POST'])
 def predict():
     if "files[]" not in request.files:
@@ -116,34 +154,33 @@ def predict():
     file = request.files["files[]"]
 
     if file and allowed_file(file.filename):
-        
         filename = secure_filename(file.filename)
-        file_path = os.path.join('uploads', filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        
-        try:
-            image = Image.open(file_path)
-            image.verify()  
-        except (IOError, SyntaxError) as e:
-            return jsonify({"error": "Invalid image file"}), 400
-
-        
+        # Read and preprocess image
         img = cv2.imread(file_path)
         if img is None:
             return jsonify({"error": "Failed to read the image"}), 400
 
-        
-        try:
-            img = cv2.resize(img, (128, 128))  # Resize to match model's expected input
-        except cv2.error as e:
-            return jsonify({"error": "Error resizing image", "details": str(e)}), 400
+        original_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img_resized = cv2.resize(original_img, (128, 128)) / 255.0
+        img_batch = np.expand_dims(img_resized, axis=0)
 
-       
-        
-        return jsonify({"message": "Prediction successful"})
+        prediction = model.predict(img_batch)
+        result_index = np.argmax(prediction)
+        predicted_class = class_names[result_index]
+        confidence = float(prediction[0][result_index])
+
+        return jsonify({
+            "status": "success",
+            "prediction": predicted_class,
+            "confidence": confidence
+        }), 200
     else:
-        return jsonify({"error": "Invalid file type. Only jpg, jpeg, and png are allowed."}), 400
+        return jsonify({"error": "Invalid file type. Only jpg, jpeg, png, and gif are allowed."}), 400
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+

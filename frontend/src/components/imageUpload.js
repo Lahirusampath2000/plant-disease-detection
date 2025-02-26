@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 const ImageUpload = () => {
   const [image, setImage] = useState(null);
@@ -24,13 +24,11 @@ const ImageUpload = () => {
 
     try {
       const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status === 201) {
-        setUploadedImage(URL.createObjectURL(image)); // Display uploaded image
+        setUploadedImage(URL.createObjectURL(image));
         setResponseMsg({ status: "success", message: "Successfully uploaded the image" });
       }
     } catch (error) {
@@ -51,9 +49,7 @@ const ImageUpload = () => {
 
     try {
       const response = await axios.post("http://127.0.0.1:5000/predict", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status === 200) {
@@ -67,64 +63,58 @@ const ImageUpload = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", position: "relative" }}>
-      {/* Form Container */}
-      <div
-        className="container"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          padding: "40px",
-          borderRadius: "10px",
-          boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
-          zIndex: 2,
-          maxWidth: "500px",  // Add maximum width to control the form width
-          width: "100%",
-        }}
-      >
+    <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      position: "relative",
+      backgroundImage: "url('/images/plantimg.png')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}>
+      <div style={{
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        padding: "40px",
+        borderRadius: "10px",
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
+        zIndex: 2,
+        maxWidth: "500px",
+        width: "100%",
+        textAlign: "center",
+      }}>
         <h1>GreenShield</h1>
         <br />
-        {responseMsg.status === "success" && <div className="alert alert-success">{responseMsg.message}</div>}
-        {responseMsg.error && <div className="alert alert-danger">{responseMsg.error}</div>}
+        {responseMsg.status === "success" && <div style={{ color: "green" }}>{responseMsg.message}</div>}
+        {responseMsg.error && <div style={{ color: "red" }}>{responseMsg.error}</div>}
         <br />
 
         <form id="imageForm" encType="multipart/form-data">
           <label htmlFor="formFile">Select an image:</label>
           <br />
-          <input id="formFile" className="form-control" type="file" onChange={handleFileChange} />
+          <input id="formFile" type="file" onChange={handleFileChange} style={{ marginBottom: "10px" }} />
           <br />
-          <button type="button" className="btn btn-primary" onClick={uploadImage} style={{ marginRight: "15px" }}>Upload Image</button>
-          <button type="button" className="btn btn-secondary" onClick={predictDisease}>Predict Image</button>
+          <button type="button" onClick={uploadImage} style={{ marginRight: "15px", padding: "10px 15px", backgroundColor: "blue", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+            Upload Image
+          </button>
+          <button type="button" onClick={predictDisease} style={{ padding: "10px 15px", backgroundColor: "gray", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+            Predict Image
+          </button>
         </form>
 
         {uploadedImage && (
           <div style={{ marginTop: "20px", textAlign: "center" }}>
             <h3>Uploaded Image:</h3>
-            <img src={uploadedImage} alt="Uploaded" style={{ maxWidth: "100%", height: "auto" }} />
+            <img src={uploadedImage} alt="Uploaded" style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }} />
           </div>
         )}
 
         {prediction && (
-          <div>
-            <h3>Predicted Disease Class: {prediction}</h3>
+          <div style={{ marginTop: "20px", padding: "10px", backgroundColor: "#e3f2fd", borderRadius: "5px", textAlign: "center" }}>
+            <h3>Predicted Disease : {prediction}</h3>
           </div>
         )}
       </div>
-
-      {/* Background Blur Image */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: "url('/images/plantimg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          filter: "blur(8px)",
-          zIndex: 1,
-        }}
-      ></div>
     </div>
   );
 };
