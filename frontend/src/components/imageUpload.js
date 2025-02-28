@@ -54,7 +54,7 @@ const ImageUpload = () => {
 
       if (response.status === 200) {
         setPrediction(response.data.prediction);
-        setResponseMsg({ status: "success", message: `Prediction: ${response.data.prediction}` });
+        //setResponseMsg({ status: "success", message: `Prediction: ${response.data.prediction}` });
       }
     } catch (error) {
       console.error(error);
