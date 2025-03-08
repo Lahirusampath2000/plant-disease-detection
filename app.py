@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,abort
 from flask_cors import CORS  # ModuleNotFoundError: No module named 'flask_cors' => pip install Flask-Cors
 import os
 import tensorflow as tf
@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 from werkzeug.utils import secure_filename  # pip install Werkzeug
 from models import db, User
+from config import ApplicationConfig
 from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
 from PIL import Image
 
@@ -13,7 +14,13 @@ from PIL import Image
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-#app.secret_key = "caircocoders-ednalan"
+app.config.from_object(ApplicationConfig)
+
+bcrypt= Bcrypt(app)
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -129,6 +136,17 @@ def predict():
     else:
         return jsonify({"error": "Invalid file type. Only jpg, jpeg, png, and gif are allowed."}), 400
 
+
+# Route for user registration
+@app.route('/register', methods=['POST'])
+def register():
+    name= request.json('name')
+    password = request.json('password')
+
+    user_exists = User.query.filter_by(name=name).first() is not None
+    if user_exists:
+        abort(409, 'User already exists')
+    return ""
 
 if __name__ == "__main__":
     app.run(debug=True)
