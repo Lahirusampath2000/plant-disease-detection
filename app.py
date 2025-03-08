@@ -10,7 +10,6 @@ from config import ApplicationConfig
 from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
 from PIL import Image
 
-
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -140,13 +139,22 @@ def predict():
 # Route for user registration
 @app.route('/register', methods=['POST'])
 def register():
-    name= request.json('name')
-    password = request.json('password')
+    name= request.json.get('name')
+    password = request.json.get('password')
 
     user_exists = User.query.filter_by(name=name).first() is not None
     if user_exists:
         abort(409, 'User already exists')
-    return ""
+
+        hashed_password=bcrypt.generate_password_hash(password)
+        new_user= User(name=name, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+    return jsonify({
+        "id": new_user.id,
+        "name": new_user.name
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
