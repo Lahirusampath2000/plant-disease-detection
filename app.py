@@ -13,24 +13,16 @@ from PIL import Image
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-app.secret_key = "caircocoders-ednalan"
+#app.secret_key = "caircocoders-ednalan"
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_ECHO = True
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
-bcrypt=Bcrypt(app)
-db.init_app(app)
-
-with app.app_context():
-    db.create_all()
+""
 
 # Load trained model for prediction
 model = tf.keras.models.load_model('plant_disease_detection_mobilenetv2model.keras')
@@ -53,50 +45,7 @@ class_names = [
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#Route for signup
-@app.route('/signup', methods=['POST'])
 
-def signup():
-    name=request.json['name']
-    password=request.json['password']
-
-    user_exists = User.query.filter_by(name=name).first()
-
-
-    if user_exists:
-        return jsonify({"error": "User already exists"}), 400
-    
-    
-    hashed_password=bcrypt.generate_password_hash(password)
-    new_user=User(name=name, password=hashed_password)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return jsonify(
-        {
-            "id": 1,
-            "name": name,
-        }
-    )
-
-@app.route('/login', methods=['POST'])
-def login():
-    name=request.json['name']
-    password=request.json['password']
-
-    user = User.query.filter_by(name=name).first()
-    if not user:
-        return jsonify({"error": "Unauthorized"}), 400
-
-    if not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Invalid password"}), 400
-
-    return jsonify(
-        {
-            "id":user.id,
-            "name":user.name,
-        }
-    )
 
 # Route for file upload
 @app.route('/upload', methods=['POST'])
