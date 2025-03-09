@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-  const [name, setName] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,7 +12,6 @@ const Register = () => {
 
     try {
       const response = await axios.post("http://127.0.0.1:5000/login", {
-        name,
         email,
         password,
       }, {
@@ -23,27 +21,16 @@ const Register = () => {
       });
 
       alert(response.data.message);
-      navigate("/"); // Redirect to Login page after registration
+      navigate("/upload-image"); // Redirect to the main page or dashboard after successful login
     } catch (error) {
-      alert("Error during registration!");
+      alert("Error during login!");
     }
   };
 
   return (
     <div className="container">
-      <h2>LOGIN</h2>
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="form-control"
-            required
-          />
-        </div>
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
@@ -68,8 +55,9 @@ const Register = () => {
         </div>
         <button type="submit" className="btn btn-dark mt-4">Login</button>
       </form>
+      <a href="/register" className="btn btn-secondary mt-4">Register page</a>
     </div>
   );
 };
 
-export default Register;
+export default Login;
