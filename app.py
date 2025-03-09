@@ -14,6 +14,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, ValidationError
 from flask_mysqldb import MySQL
 import bcrypt
+from flask import session
+
 
 
 app = Flask(__name__)
@@ -45,6 +47,11 @@ class RegisterForm(FlaskForm):
     email = StringField("Email",validators=[DataRequired(), Email()])
     password = PasswordField("Password",validators=[DataRequired()])
     submit = SubmitField("Register")
+
+class LoginForm(FlaskForm):
+    email = StringField("Email",validators=[DataRequired(), Email()])
+    password = PasswordField("Password",validators=[DataRequired()])
+    submit = SubmitField("Login")
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -104,6 +111,31 @@ def register():
     cursor.close()
 
     return jsonify({"message": "Registration successful"}), 201
+
+@app.route('/login', methods=['POST'])
+def login():
+    # Get the JSON data from the request
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    # Check if all fields are provided
+    if not email or not password:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    # Get the user from the database
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    cursor.close()
+
+    # Check if the user exists
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+        session['user_id'] = user[0]
+        return jsonify({"message": "Login successful"}), 200
+    else:
+        return jsonify({"error": "Invalid email or password"}), 401
+    
 
     
 # Route for file upload
