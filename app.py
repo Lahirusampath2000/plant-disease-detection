@@ -12,6 +12,7 @@ from PIL import Image
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, ValidationError
+from flask_mysqldb import MySQL
 import bcrypt
 
 
@@ -31,6 +32,15 @@ class RegisterForm(FlaskForm):
 
 #with app.app_context():
     #db.create_all()
+
+#sql config
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'plant_disease_detection'
+app.secret_key ='your secret_key_here'
+
+mysql = MySQL(app)
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -78,6 +88,11 @@ def register():
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
 
+        cursor=mysql.connection.cursor()
+        cursor.execute("INSERT INTO users(name,email,password) VALUES(%s,%s,%s)",(name,email,password))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({"message":"User registered successfully"}), 201
     
 # Route for file upload
 @app.route('/upload', methods=['POST'])
