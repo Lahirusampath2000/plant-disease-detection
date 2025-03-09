@@ -9,17 +9,28 @@ from models import db, User
 from config import ApplicationConfig
 from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
 from PIL import Image
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, ValidationError
+
+
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-app.config.from_object(ApplicationConfig)
 
-bcrypt= Bcrypt(app)
-db.init_app(app)
+class RegisterForm(FlaskForm):
+    name= StringField('Name', validators=[DataRequired()])
+    email= StringField('Email', validators=[DataRequired(), Email()])
+    password= PasswordField('Password', validators=[DataRequired()])
+    submit= SubmitField('Register')
+#app.config.from_object(ApplicationConfig)
 
-with app.app_context():
-    db.create_all()
+#bcrypt= Bcrypt(app)
+#db.init_app(app)
+
+#with app.app_context():
+    #db.create_all()
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
