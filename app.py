@@ -7,12 +7,12 @@ import cv2
 from werkzeug.utils import secure_filename  # pip install Werkzeug
 from models import db, User
 from config import ApplicationConfig
-from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
+#from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
 from PIL import Image
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, ValidationError
-
+import bcrypt
 
 
 app = Flask(__name__)
@@ -69,6 +69,14 @@ def index():
 
 # Route for user registration
 @app.route('/register', methods=['POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
 
     
 # Route for file upload
