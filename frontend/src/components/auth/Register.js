@@ -19,7 +19,7 @@ const Register = () => {
       });
 
       alert(response.data.message);
-      navigate("/login"); // Redirect to Login page after registration
+      navigate("/"); // Redirect to Login page after registration
     } catch (error) {
       alert("Error during registration!");
     }
