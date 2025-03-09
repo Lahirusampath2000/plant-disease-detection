@@ -55,7 +55,7 @@ const Login = () => {
         </div>
         <button type="submit" className="btn btn-dark mt-4">Login</button>
       </form>
-      <a href="/register" className="btn btn-secondary mt-4">Register page</a>
+      
     </div>
   );
 };
