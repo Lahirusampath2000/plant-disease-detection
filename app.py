@@ -112,7 +112,7 @@ def register():
 
     return jsonify({"message": "Registration successful"}), 201
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET' , 'POST'])
 def login():
     # Get the JSON data from the request
     data = request.get_json()
@@ -130,7 +130,7 @@ def login():
     cursor.close()
 
     # Check if the user exists
-    if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+    if user and bcrypt.checkpw(password.encode('utf-8'), user[3].encode('utf-8')):  
         session['user_id'] = user[0]
         return jsonify({"message": "Login successful"}), 200
     else:
