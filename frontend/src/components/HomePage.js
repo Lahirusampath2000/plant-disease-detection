@@ -19,9 +19,21 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
+    <div style={{ textAlign: "center", padding: "50px", position: "relative" }}>
       <h1>Plant Disease Detection</h1>
       <p>{message}</p>
+      <button
+        className="btn btn-primary"
+        style={{
+          position: "absolute",
+          right: "300px",
+          top: "360px",
+          padding: "15px 30px",
+          fontSize: "20px",
+        }}
+      >
+        Login
+      </button>
     </div>
   );
 };
