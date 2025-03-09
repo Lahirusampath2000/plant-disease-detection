@@ -51,8 +51,15 @@ class_names = [
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+#Route for home page
+@app.route('/', methods=['POST'])
+def index():
+    return jsonify({"message": "Welcome to Plant Disease Detection system"})
 
+# Route for user registration
+@app.route('/register', methods=['POST'])
 
+    
 # Route for file upload
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -136,25 +143,6 @@ def predict():
         return jsonify({"error": "Invalid file type. Only jpg, jpeg, png, and gif are allowed."}), 400
 
 
-# Route for user registration
-@app.route('/register', methods=['POST'])
-def register():
-    name= request.json.get('name')
-    password = request.json.get('password')
-
-    user_exists = User.query.filter_by(name=name).first() is not None
-    if user_exists:
-        abort(409, 'User already exists')
-
-        hashed_password=bcrypt.generate_password_hash(password)
-        new_user= User(name=name, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-
-    return jsonify({
-        "id": new_user.id,
-        "name": new_user.name
-    })
 
 if __name__ == "__main__":
     app.run(debug=True)

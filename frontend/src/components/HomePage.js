@@ -1,14 +1,29 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-function HomePage() {
+const HomePage = () => {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const fetchMessage = async () => {
+      try {
+        const response = await axios.post("http://127.0.0.1:5000/");
+        setMessage(response.data.message);
+      } catch (error) {
+        console.error("Error fetching message:", error);
+        setMessage("Error connecting to the API");
+      }
+    };
+
+    fetchMessage();
+  }, []);
+
   return (
-    <div>
-      <h1>Welcome to the Homepage</h1>
-      <p>This is the home page. You can go to the upload page to upload images.</p>
-      <Link to="/upload">Go to Image Upload Page</Link>
+    <div style={{ textAlign: "center", padding: "50px" }}>
+      <h1>Plant Disease Detection</h1>
+      <p>{message}</p>
     </div>
   );
-}
+};
 
 export default HomePage;
