@@ -20,11 +20,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 
-class RegisterForm(FlaskForm):
-    name= StringField('Name', validators=[DataRequired()])
-    email= StringField('Email', validators=[DataRequired(), Email()])
-    password= PasswordField('Password', validators=[DataRequired()])
-    submit= SubmitField('Register')
+
 #app.config.from_object(ApplicationConfig)
 
 #bcrypt= Bcrypt(app)
@@ -34,13 +30,21 @@ class RegisterForm(FlaskForm):
     #db.create_all()
 
 #sql config
+# MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'plant_disease_detection'
-app.secret_key ='your secret_key_here'
+app.secret_key = 'your_secret_key_here'
+
 
 mysql = MySQL(app)
+
+class RegisterForm(FlaskForm):
+    name = StringField("Name",validators=[DataRequired()])
+    email = StringField("Email",validators=[DataRequired(), Email()])
+    password = PasswordField("Password",validators=[DataRequired()])
+    submit = SubmitField("Register")
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -80,19 +84,27 @@ def index():
 # Route for user registration
 @app.route('/register', methods=['POST'])
 def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        name = form.name.data
-        email = form.email.data
-        password = form.password.data
+    # Get the JSON data from the request
+    data = request.get_json()
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
 
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
+    # Check if all fields are provided
+    if not name or not email or not password:
+        return jsonify({"error": "Missing required fields"}), 400
 
-        cursor=mysql.connection.cursor()
-        cursor.execute("INSERT INTO users(name,email,password) VALUES(%s,%s,%s)",(name,email,password))
-        mysql.connection.commit()
-        cursor.close()
-        return jsonify({"message":"User registered successfully"}), 201
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    # Store data in the database
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, hashed_password))
+    mysql.connection.commit()
+    cursor.close()
+
+    return jsonify({"message": "Registration successful"}), 201
+
     
 # Route for file upload
 @app.route('/upload', methods=['POST'])

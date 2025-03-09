@@ -16,6 +16,10 @@ const Register = () => {
         name,
         email,
         password,
+      }, {
+        headers: {
+          "Content-Type": "application/json",  // Ensure the content type is set to JSON
+        },
       });
 
       alert(response.data.message);
@@ -26,38 +30,45 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
           <input
             type="text"
+            id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="form-control"
             required
           />
         </div>
-        <div>
-          <label>Email</label>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
           <input
             type="email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="form-control"
             required
           />
         </div>
-        <div>
-          <label>Password</label>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
           <input
             type="password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="form-control"
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="btn btn-dark mt-4">Register</button>
       </form>
+      <a href="/login" className="btn btn-secondary mt-4">Login page</a>
     </div>
   );
 };
