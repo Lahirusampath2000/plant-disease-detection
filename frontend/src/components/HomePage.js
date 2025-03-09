@@ -31,6 +31,7 @@ const HomePage = () => {
           padding: "15px 30px",
           fontSize: "20px",
         }}
+        onClick={() => (window.location.href = "/login")}  
       >
         Login
       </button>
