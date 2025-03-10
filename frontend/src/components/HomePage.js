@@ -40,7 +40,7 @@ const HomePage = () => {
 };
 const styles = {
   brandingText: {
-    fontSize: "40px",
+    fontSize: "60px",
     color: "#2ecc71",
   },
 }
