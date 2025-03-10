@@ -79,7 +79,6 @@ const Register = () => {
             Signup
           </button>
 
-          {/* Sign-in link at the bottom */}
           <div style={styles.signInContainer}>
             <h4>
               Have an account? <a href="/login">Sign in</a>

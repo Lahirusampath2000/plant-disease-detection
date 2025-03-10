@@ -90,7 +90,7 @@ const styles = {
   },
   formContainer: {
     width: "40%",
-    height: "80vh",
+    height: "90vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -101,7 +101,7 @@ const styles = {
     textAlign: "center",
   },
   branding: {
-    marginBottom: "10px",
+    marginBottom: "40px",
   },
   brandingText: {
     color: "#2E8B57",
