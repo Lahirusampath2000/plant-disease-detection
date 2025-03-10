@@ -116,7 +116,7 @@ const styles = {
     marginBottom: "10px",
   },
   brandingText: {
-    color: "#2E8B57", // Green color
+    color: "#1F6A3C", // Green color
     fontFamily: "'Poppins', sans-serif",
     fontSize: "40px",
     fontWeight: "bold",

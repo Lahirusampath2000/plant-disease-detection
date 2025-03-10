@@ -95,7 +95,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     padding: "40px",
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
     borderRadius: "10px",
     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
@@ -104,7 +104,7 @@ const styles = {
     marginBottom: "40px",
   },
   brandingText: {
-    color: "#2E8B57",
+    color: "#1F6A3C",
     fontFamily: "'Poppins', sans-serif",
     fontSize: "40px",
     fontWeight: "bold",

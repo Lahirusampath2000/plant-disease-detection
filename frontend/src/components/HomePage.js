@@ -83,7 +83,7 @@ const HomePage = () => {
 const styles = {
   brandingText: {
     fontSize: "60px",
-    color: "#2ecc71",
+    color: "#1F6A3C",
   },
   title2: {
     fontSize: "30px",
