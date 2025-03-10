@@ -51,17 +51,19 @@ const HomePage = () => {
         ))}
       </p>
       <button
-        className="btn btn-primary"
+        className="btn btn-success"
         style={{
           position: "absolute",
-          right: "300px",
           top: "360px",
-          padding: "15px 30px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          transform: "translateX(-50%)",
+          padding: "10px 25px",
           fontSize: "20px",
         }}
         onClick={() => (window.location.href = "/login")}  
       >
-        Login
+        GET STARTED
       </button>
     </div>
   );
