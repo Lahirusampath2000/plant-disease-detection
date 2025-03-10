@@ -20,7 +20,7 @@ const HomePage = () => {
 
   return (
     <div style={{ textAlign: "center", padding: "50px", position: "relative" }}>
-      <h1>GreenShield</h1>
+      <h1 style={styles.brandingText}>GreenShield</h1>
       <p>{message}</p>
       <button
         className="btn btn-primary"
@@ -38,5 +38,11 @@ const HomePage = () => {
     </div>
   );
 };
+const styles = {
+  brandingText: {
+    fontSize: "40px",
+    color: "#2ecc71",
+  },
+}
 
 export default HomePage;
