@@ -20,8 +20,36 @@ const HomePage = () => {
 
   return (
     <div style={{ textAlign: "center", padding: "50px", position: "relative" }}>
+      <style>
+        {`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}
+      </style>
+
       <h1 style={styles.brandingText}>GreenShield</h1>
-      <p>{message}</p>
+      <p style={styles.title2}>
+        {message.split('').map((char, index) => (
+          <span
+            key={index}
+            style={{
+              opacity: 0,
+              animation: `fadeIn 0.6s forwards`,
+              animationDelay: `${index * 0.05}s`,
+            }}
+          >
+            {char}
+          </span>
+        ))}
+      </p>
       <button
         className="btn btn-primary"
         style={{
@@ -38,11 +66,17 @@ const HomePage = () => {
     </div>
   );
 };
+
 const styles = {
   brandingText: {
     fontSize: "60px",
     color: "#2ecc71",
   },
-}
+  title2: {
+    fontSize: "30px",
+    color: "#333",
+    margin: "20px 0",
+  },
+};
 
 export default HomePage;
