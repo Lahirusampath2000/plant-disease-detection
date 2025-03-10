@@ -40,7 +40,7 @@ const HomePage = () => {
               text-shadow: 0 0 5px #fff, 0 0 10px #2ecc71, 0 0 15px #2ecc71, 0 0 20px #2ecc71;
             }
             to {
-              text-shadow: 0 0 10px #fff, 0 0 20px #2ecc71, 0 0 30px #2ecc71, 0 0 40px #2ecc71;
+              text-shadow: 0 0 5px #fff, 0 0 20px #2ecc71, 0 0 30px #2ecc71, 0 0 4px #2ecc71;
             }
           }
         `}
@@ -62,7 +62,7 @@ const HomePage = () => {
         ))}
       </p>
       <button
-        className="btn btn-success"
+        class="btn btn-outline-primary"
         style={{
           position: "absolute",
           top: "360px",
