@@ -19,7 +19,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div style={{ textAlign: "center", padding: "50px", position: "relative" }}>
+    <div style={{ textAlign: "center", padding: "50px", position: "relative", backgroundImage: "url('/images/home.jpg')", backgroundSize: "cover", backgroundPosition: "center", height: "100vh" }}>
       <style>
         {`
           @keyframes fadeIn {
