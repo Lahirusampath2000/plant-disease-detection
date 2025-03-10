@@ -32,11 +32,22 @@ const HomePage = () => {
               transform: translateY(0);
             }
           }
+            .glowing-text {
+            animation: glow 1.5s infinite alternate;
+          }
+            @keyframes glow {
+            from {
+              text-shadow: 0 0 5px #fff, 0 0 10px #2ecc71, 0 0 15px #2ecc71, 0 0 20px #2ecc71;
+            }
+            to {
+              text-shadow: 0 0 10px #fff, 0 0 20px #2ecc71, 0 0 30px #2ecc71, 0 0 40px #2ecc71;
+            }
+          }
         `}
       </style>
 
       <h1 style={styles.brandingText}>GreenShield</h1>
-      <p style={styles.title2}>
+      <p className="glowing-text" style={styles.title2}>
         {message.split('').map((char, index) => (
           <span
             key={index}
