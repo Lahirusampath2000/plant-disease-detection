@@ -86,7 +86,7 @@ def allowed_file(filename):
 #Route for home page
 @app.route('/', methods=['POST'])
 def index():
-    return jsonify({"message": "Welcome to Plant Disease Detection system"})
+    return jsonify({"message": "AI POWERED PLANT DISEASE DETECTION SYSTEM"}), 200
 
 # Route for user registration
 @app.route('/register', methods=['POST'])

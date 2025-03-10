@@ -20,7 +20,7 @@ const HomePage = () => {
 
   return (
     <div style={{ textAlign: "center", padding: "50px", position: "relative" }}>
-      <h1>Plant Disease Detection</h1>
+      <h1>GreenShield</h1>
       <p>{message}</p>
       <button
         className="btn btn-primary"
