@@ -233,7 +233,10 @@ const ImageUpload = () => {
                 fontSize: "20px",
                 color: "black",
                 cursor: "pointer",
+                
               }}
+              onMouseEnter={(e) => (e.target.style.color = "red")}
+              onMouseLeave={(e) => (e.target.style.color = "black")}
             >
               <X/>
             </button>
