@@ -212,7 +212,7 @@ const ImageUpload = () => {
             style={{
               position: "relative",
               backgroundColor: "white",
-              padding: "50x",
+              padding: "50px 20px 20px",
               borderRadius: "10px",
               width: "50%",
               height: "400px",
