@@ -100,6 +100,10 @@ const ImageUpload = () => {
           <button type="button" onClick={predictDisease} style={{ padding: "10px 15px", backgroundColor: "gray", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
             Predict Image
           </button>
+        
+          <button type="button"  style={{ padding: "10px 15px", backgroundColor: "green", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+            Generate Treatment Plan
+          </button>
         </form>
 
         {uploadedImage && (
