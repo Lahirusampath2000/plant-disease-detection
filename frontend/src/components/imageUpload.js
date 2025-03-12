@@ -10,7 +10,7 @@ const ImageUpload = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [displayTreatmentPlanbtn, setDisplayTreatmentPlanbtn] = useState(false);
   const [treatment_plan, setTreatmentPlan] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);  // Modal visibility state
+  const [showPopup, setShowPopup] = useState(false);  
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -62,7 +62,7 @@ const ImageUpload = () => {
 
       if (response.status === 200) {
         setPrediction(response.data.prediction);
-        setTreatmentPlan(response.data.treatment_plan); // Assuming the backend sends treatment plan data
+        setTreatmentPlan(response.data.treatment_plan); 
         setDisplayTreatmentPlanbtn(true);
       }
     } catch (error) {
@@ -107,7 +107,7 @@ const ImageUpload = () => {
           textAlign: "center",
         }}
       >
-        <h1>GreenShield</h1>
+        <h1 style={{color:"green"}}>GreenShield</h1>
         <br />
         {responseMsg.status === "success" && <div style={{ color: "green" }}>{responseMsg.message}</div>}
         {responseMsg.error && <div style={{ color: "red" }}>{responseMsg.error}</div>}
@@ -226,9 +226,9 @@ const ImageUpload = () => {
               <div>
                 {treatment_plan ? (
                   treatment_plan
-                    .split(/(?=\d\.)/) // Splitting where a number followed by a dot appears
+                    .split(/(?=\d\.)/) 
                     .map((step, index) => (
-                      <p key={index}>{step.trim()}</p> // Trim spaces and render each step separately
+                      <p key={index}>{step.trim()}</p> 
                     ))
                 ) : (
                   <p>No treatment plan available.</p>
