@@ -220,8 +220,21 @@ const ImageUpload = () => {
               color: "black",
             }}
           >
-            <h3>Treatment Plan</h3>
-            <p>{treatment_plan}</p>
+            <div style={{ marginTop: "20px" }}>
+              <h3>Treatment Plan</h3>
+              <br></br>
+              <div>
+                {treatment_plan ? (
+                  treatment_plan
+                    .split(/(?=\d\.)/) // Splitting where a number followed by a dot appears
+                    .map((step, index) => (
+                      <p key={index}>{step.trim()}</p> // Trim spaces and render each step separately
+                    ))
+                ) : (
+                  <p>No treatment plan available.</p>
+                )}
+              </div>
+            </div>
             <button
               onClick={closePopup}
               style={{

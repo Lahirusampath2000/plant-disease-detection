@@ -218,6 +218,11 @@ def predict():
         cursor.execute("SELECT TreatmentPlan FROM plant_diseases WHERE DiseaseName = %s", (predicted_class,))
         treatment_plan = cursor.fetchone()
         cursor.close()
+        
+        if treatment_plan:
+            treatment_plan = treatment_plan[0]  # Extract the treatment plan as a string
+        else:
+            treatment_plan = "No treatment plan available for this disease."
 
         return jsonify({
             "status": "success",
