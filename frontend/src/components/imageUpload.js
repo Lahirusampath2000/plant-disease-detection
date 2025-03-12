@@ -11,6 +11,7 @@ const ImageUpload = () => {
   // Handle file selection
   const handleFileChange = (e) => {
     setImage(e.target.files[0]);
+    setdisplayTreatmentPlanbtn(false);
   };
 
   // Handle file upload
@@ -55,12 +56,13 @@ const ImageUpload = () => {
 
       if (response.status === 200) {
         setPrediction(response.data.prediction);
-        setshowTreatmentPlanbtn(true);
-        //setResponseMsg({ status: "success", message: `Prediction: ${response.data.prediction}` });
+        setdisplayTreatmentPlanbtn(true);
+       
       }
     } catch (error) {
       console.error(error);
       setResponseMsg({ status: "failed", message: "Prediction failed. Try again." });
+      setdisplayTreatmentPlanbtn(false);
     }
   };
 
@@ -102,10 +104,7 @@ const ImageUpload = () => {
           <button type="button" onClick={predictDisease} style={{ padding: "10px 15px", backgroundColor: "gray", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
             Predict Image
           </button>
-        
-          <button type="button"  style={{ padding: "10px 15px", backgroundColor: "green", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
-            Generate Treatment Plan
-          </button>
+    
         </form>
 
         {uploadedImage && (
@@ -119,6 +118,12 @@ const ImageUpload = () => {
           <div style={{ marginTop: "20px", padding: "10px", backgroundColor: "#e3f2fd", borderRadius: "5px", textAlign: "center" }}>
             <h3>Predicted Disease : {prediction}</h3>
           </div>
+        )}
+
+        {displayTreatmentPlanbtn && (
+          <button  style={{ marginTop: "10px", padding: "8px 12px", backgroundColor: "green", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+          Generate Treatment Plan
+        </button>
         )}
       </div>
     </div>
