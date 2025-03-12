@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { X } from 'lucide-react';
+
 
 const ImageUpload = () => {
   const [image, setImage] = useState(null);
@@ -15,6 +17,8 @@ const ImageUpload = () => {
     setImage(e.target.files[0]);
     setDisplayTreatmentPlanbtn(false);
   };
+
+
 
   // Handle file upload
   const uploadImage = async () => {
@@ -231,7 +235,7 @@ const ImageUpload = () => {
                 cursor: "pointer",
               }}
             >
-              close
+              <X/>
             </button>
           </div>
         </div>
