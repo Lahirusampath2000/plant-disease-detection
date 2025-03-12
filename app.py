@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 from werkzeug.utils import secure_filename  # pip install Werkzeug
 from models import db, User
-from config import ApplicationConfig
+
 #from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
 from PIL import Image
 from flask_wtf import FlaskForm

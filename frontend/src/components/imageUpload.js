@@ -6,12 +6,14 @@ const ImageUpload = () => {
   const [responseMsg, setResponseMsg] = useState({ status: "", message: "", error: "" });
   const [prediction, setPrediction] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [displayTreatmentPlanbtn, setdisplayTreatmentPlanbtn] = useState(false);
+  const [displayTreatmentPlanbtn, setDisplayTreatmentPlanbtn] = useState(false);
+  const [treatment_plan, setTreatmentPlan] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);  // Modal visibility state
 
   // Handle file selection
   const handleFileChange = (e) => {
     setImage(e.target.files[0]);
-    setdisplayTreatmentPlanbtn(false);
+    setDisplayTreatmentPlanbtn(false);
   };
 
   // Handle file upload
@@ -56,37 +58,51 @@ const ImageUpload = () => {
 
       if (response.status === 200) {
         setPrediction(response.data.prediction);
-        setdisplayTreatmentPlanbtn(true);
-       
+        setTreatmentPlan(response.data.treatment_plan); // Assuming the backend sends treatment plan data
+        setDisplayTreatmentPlanbtn(true);
       }
     } catch (error) {
       console.error(error);
       setResponseMsg({ status: "failed", message: "Prediction failed. Try again." });
-      setdisplayTreatmentPlanbtn(false);
+      setDisplayTreatmentPlanbtn(false);
     }
   };
 
+  // Open the treatment plan popup widow
+  const openPopup = () => {
+    setShowPopup(true);
+  };
+
+  // Close the treatment plan popup window
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: "100vh",
-      position: "relative",
-      backgroundImage: "url('/images/plantimg.png')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}>
-      <div style={{
-        backgroundColor: "rgba(255, 255, 255, 0.5)",
-        padding: "40px",
-        borderRadius: "10px",
-        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
-        zIndex: 2,
-        maxWidth: "500px",
-        width: "100%",
-        textAlign: "center",
-      }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        position: "relative",
+        backgroundImage: "url('/images/plantimg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.5)",
+          padding: "40px",
+          borderRadius: "10px",
+          boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
+          zIndex: 2,
+          maxWidth: "500px",
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
         <h1>GreenShield</h1>
         <br />
         {responseMsg.status === "success" && <div style={{ color: "green" }}>{responseMsg.message}</div>}
@@ -98,34 +114,128 @@ const ImageUpload = () => {
           <br />
           <input id="formFile" type="file" onChange={handleFileChange} style={{ marginBottom: "10px" }} />
           <br />
-          <button type="button" onClick={uploadImage} style={{ marginRight: "15px", padding: "10px 15px", backgroundColor: "blue", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+          <button
+            type="button"
+            onClick={uploadImage}
+            style={{
+              marginRight: "15px",
+              padding: "10px 15px",
+              backgroundColor: "blue",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
             Upload Image
           </button>
-          <button type="button" onClick={predictDisease} style={{ padding: "10px 15px", backgroundColor: "gray", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+          <button
+            type="button"
+            onClick={predictDisease}
+            style={{
+              padding: "10px 15px",
+              backgroundColor: "gray",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
             Predict Image
           </button>
-    
         </form>
 
         {uploadedImage && (
           <div style={{ marginTop: "20px", textAlign: "center" }}>
             <h3>Uploaded Image:</h3>
-            <img src={uploadedImage} alt="Uploaded" style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }} />
+            <img
+              src={uploadedImage}
+              alt="Uploaded"
+              style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+            />
           </div>
         )}
 
         {prediction && (
-          <div style={{ marginTop: "20px", padding: "10px", backgroundColor: "#e3f2fd", borderRadius: "5px", textAlign: "center" }}>
-            <h3>Predicted Disease : {prediction}</h3>
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "10px",
+              backgroundColor: "#e3f2fd",
+              borderRadius: "5px",
+              textAlign: "center",
+            }}
+          >
+            <h3>Predicted Disease: {prediction}</h3>
           </div>
         )}
 
         {displayTreatmentPlanbtn && (
-          <button  style={{ marginTop: "10px", padding: "8px 12px", backgroundColor: "green", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
-          Generate Treatment Plan
-        </button>
+          <button
+            onClick={openPopup}
+            style={{
+              marginTop: "10px",
+              padding: "8px 12px",
+              backgroundColor: "green",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            View Treatment Plan
+          </button>
         )}
       </div>
+
+     
+      {showPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              backgroundColor: "white",
+              padding: "50x",
+              borderRadius: "10px",
+              width: "50%",
+              height: "400px",
+              textAlign: "center",
+              color: "black",
+            }}
+          >
+            <h3>Treatment Plan</h3>
+            <p>{treatment_plan}</p>
+            <button
+              onClick={closePopup}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "15px",
+                background: "none",
+                border: "none",
+                fontSize: "20px",
+                color: "black",
+                cursor: "pointer",
+              }}
+            >
+              close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
