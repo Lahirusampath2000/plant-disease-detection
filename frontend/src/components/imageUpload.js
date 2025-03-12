@@ -6,6 +6,7 @@ const ImageUpload = () => {
   const [responseMsg, setResponseMsg] = useState({ status: "", message: "", error: "" });
   const [prediction, setPrediction] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [displayTreatmentPlanbtn, setdisplayTreatmentPlanbtn] = useState(false);
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -54,6 +55,7 @@ const ImageUpload = () => {
 
       if (response.status === 200) {
         setPrediction(response.data.prediction);
+        setshowTreatmentPlanbtn(true);
         //setResponseMsg({ status: "success", message: `Prediction: ${response.data.prediction}` });
       }
     } catch (error) {
