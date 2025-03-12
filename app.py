@@ -213,10 +213,17 @@ def predict():
         predicted_class = class_names[result_index]
         confidence = float(prediction[0][result_index])
 
+        #fetch treatment plan
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT TreatmentPlan FROM plant_diseases WHERE DiseaseName = %s", (predicted_class,))
+        treatment_plan = cursor.fetchone()
+        cursor.close()
+
         return jsonify({
             "status": "success",
             "prediction": predicted_class,
-            "confidence": confidence
+            "confidence": confidence,
+            "treatment_plan": treatment_plan
         }), 200
     else:
         return jsonify({"error": "Invalid file type. Only jpg, jpeg, png, and gif are allowed."}), 400
