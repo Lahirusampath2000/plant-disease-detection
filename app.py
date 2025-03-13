@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify,abort
-from flask_cors import CORS  # ModuleNotFoundError: No module named 'flask_cors' => pip install Flask-Cors
+from flask_cors import CORS  
 import os
 import tensorflow as tf
 import numpy as np
 import cv2
-from werkzeug.utils import secure_filename  # pip install Werkzeug
+from werkzeug.utils import secure_filename 
 from models import db, User
 
-#from flask_bcrypt import Bcrypt  # pip install Flask-Bcrypt
+
 from PIL import Image
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -23,16 +23,7 @@ CORS(app, supports_credentials=True)
 
 
 
-#app.config.from_object(ApplicationConfig)
 
-#bcrypt= Bcrypt(app)
-#db.init_app(app)
-
-#with app.app_context():
-    #db.create_all()
-
-#sql config
-# MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
@@ -92,7 +83,7 @@ def index():
 # Route for user registration
 @app.route('/register', methods=['POST'])
 def register():
-    # Get the JSON data from the request
+    
     data = request.get_json()
     name = data.get('name')
     email = data.get('email')

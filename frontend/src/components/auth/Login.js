@@ -18,7 +18,6 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      alert(response.data.message);
       navigate("/upload-image"); // Redirect after login
     } catch (error) {
       alert(error.response?.data?.message || "Error during login!");
